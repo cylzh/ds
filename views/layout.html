@@ -2,9 +2,24 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>{{ title }}</title>
+    <link href="/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootflat.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    {% block style %}{% endblock %}
 </head>
 <body>
+{% include "header.html"%}
 
+<div class="content">
+    <div class="container">
+        {%block content%}{%endblock%}
+    </div>
+</div>
+
+{% include "footer.html" %}
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+{% block script %}{% endblock %}
 </body>
 </html>

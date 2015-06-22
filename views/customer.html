@@ -1,0 +1,152 @@
+{%extends "layout.html"%}
+
+{%block style%}
+<link rel="stylesheet" href="/css/page.css">
+{%endblock%}
+
+{%block content%}
+<button class="btn btn-primary mb20" data-toggle="modal" data-target="#myModal">
+    添加
+</button>
+
+<table class="table">
+    <tbody>
+    <tr>
+        <th>#</th>
+        <th>用户名</th>
+
+        <th>添加时间</th>
+        <th></th>
+    </tr>
+
+    {%for user in userList%}
+    {% set colNum=colNum+1 %}
+    <tr>
+        <td>{{colNum}}</td>
+        <td>{{user.userName}}</td>
+        <td>{{user.createDate|date("Y-m-d H:i:s",-480)}}</td>
+        <td>
+            <button type="button" class="btn btn-info btn-update" data-toggle="modal" data-target="#myModal"
+                    data-id="{{user.id}}" data-userName="{{user.userName}}">
+                修改
+            </button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delModal"
+                    data-id="{{user.id}}">删除
+            </button>
+        </td>
+    </tr>
+
+    {%endfor%}
+    </tbody>
+</table>
+<div id="page"></div>
+
+<div>
+    <input type="hidden" value="{{pn}}" id="currentPage">
+    <input type="hidden" value="{{totalPages}}" id="totalPages">
+</div>
+
+<div class="modal fade" id="delModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+                是否确认删除该用户
+            </div>
+            <form method="post" id="del-from">
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" type="submit">确定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4>用户</h4>
+            </div>
+            <form class="form-horizontal" action="/user/add" method="post" id="user-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-2 control-label">用户名：</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" placeholder="请输入用户名" name="userName" id="userName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-sm-2 control-label">密码：</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" placeholder="请输入密码" name="password"
+                                   id="password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-default btn-primary">确定</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block script%}
+<script src="/js/bootstrap-paginator.js"></script>
+<script>
+    $(function () {
+        var userForm = $("#user-form"),
+                userName = $("[name=userName]");
+
+        $("#myModal").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            if (button.hasClass("btn-update")) {
+                var id = button.attr("data-id");
+                userForm.attr("action", "/user/update/" + id);
+                userName.val(button.attr("data-userName"));
+            } else {
+                userForm.attr("action", "/user/add");
+                userName.val("");
+            }
+        });
+
+        var delForm = $("#del-from");
+        $("#delModal").on("show.bs.modal", function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.attr("data-id");
+
+            delForm.attr("action", "/user/del/" + id);
+        })
+
+
+        //currentPage totalPages
+        var currentPage = $("#currentPage").val(),
+                totalPages = $("#totalPages").val(),
+                page = $("#page");
+
+        var options = {
+            currentPage: currentPage,
+            totalPages: totalPages,
+            numberOfPages: 3,
+            pageUrl: function (type, page, current) {
+                return "/user?pn=" + page;
+            }
+        }
+
+        page.bootstrapPaginator(options)
+    })
+</script>
+
+{%endblock%}

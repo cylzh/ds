@@ -1,8 +1,40 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+ul, li {
+    list-style: none;
 }
 
-a {
-  color: #00B7FF;
+.minH600 {
+    min-height: 600px;
+}
+
+.ml40 {
+    margin-left: 40px;
+}
+
+.navbar-fixed-top {
+    background: #fff;
+}
+
+.navbar-header .header-icon {
+    line-height: 40px;
+    font-size: 20px;
+}
+
+.nav-text {
+    line-height: 40px;
+}
+
+.content {
+    margin-top: 50px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.has-error {
+    border-color: #da4453;
+}
+
+.footer {
+    color: #fff;
 }
