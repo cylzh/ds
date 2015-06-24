@@ -8,9 +8,12 @@ var http = require('http');
 var path = require('path');
 var con = require("consolidate");
 var mongoose = require("./lib/mongodb");
+var MongoStore = require("connect-mongo")(express);
 var multiparty = require("connect-multiparty");
-
+var render = require("./middleware/render");
+var flash = require("connect-flash");
 var app = express();
+
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -28,13 +31,18 @@ app.use(multiparty({uploadDir: "./public/upload/"}));
 
 app.use(express.methodOverride());
 
+app.use(flash());
 app.use(express.cookieParser())
 app.use(express.session({
     key: "ds_id",
     cookie: {maxAge: 24 * 60 * 60 * 1000},
-    secret: "secret"
+    secret: "secret",
+    store: new MongoStore({
+        db: "ds"
+    })
 }))
 
+app.use(render());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 

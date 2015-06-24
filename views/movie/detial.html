@@ -1,0 +1,33 @@
+{%extends "../layout.html"%}
+
+
+{%block content%}
+<div class="jumbotron clearfix">
+    <div class="jumbotron-photo col-md-6">
+        <img src="{{movie.placard}}">
+    </div>
+    <div class="jumbotron-contents col-md-6">
+        <h1>
+            {{movie.title}}
+        </h1>
+        <ul>
+            <li>
+                导演： {{movie.director}}
+            </li>
+            <li>
+                上映日期：{{movie.publish_date |date("Y-m-d","-480")}}
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="media">
+    <a class="pull-left">
+        <img src="{{movie._user.avatar}}">
+    </a>
+
+    <div class="media-body">
+        <h3>{{movie._user.userName}}</h3>
+    </div>
+</div>
+{%endblock%}

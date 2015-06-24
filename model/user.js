@@ -22,8 +22,8 @@ UserDto.prototype.find = function (obj, callback) {
         var userList = [];
         if (!err) {
             userList = dtos;
-            callback(userList);
         }
+        callback(userList);
     });
 }
 
