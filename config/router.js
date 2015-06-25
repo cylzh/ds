@@ -32,6 +32,9 @@ module.exports = function (app) {
 
     //editor
     app.get("/editor", editor.index);
-    app.get("/editor/content",editor.content)
+    app.get("/editor/content", editor.content);
+    app.post("/editor/article", editor.article);
+    app.get("/editor/uEditorHandler", editor.uEditorHandler);
+    app.post("/editor/uEditorHandler", editor.uEditorHandler);
 
 }

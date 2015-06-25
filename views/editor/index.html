@@ -27,58 +27,30 @@
     }
 </style>
 {%endblock%}
-
 {%block content%}
-<div class="editor">
-    <div class="editor-tool-bar" id="editor">
-        <span class="button" title="bold" unselectable="on">加粗</span>
-        <span class="button" title="italic" unselectable="on">斜体</span>
-        <span class="button" title="underline" unselectable="on">下划</span>
-        <span class="button" title="justifycenter" unselectable="on">居中</span>
-        <span class="button" title="justifyleft" unselectable="on">居左</span>
-        <span class="button" title="justifyright" unselectable="on">居右</span>
-        <span class="button" title="outdent" unselectable="on">悬挂</span>
-        <span class="button" title="indent" unselectable="on">缩进</span>
-        <span class="button" title="insertunorderedlist" unselectable="on">无序</span>
-        <span class="button" title="insertorderedlist" unselectable="on">有序</span>
-        <span class="button" title="createlink" unselectable="on">链接</span>
-        <span class="button" title="insertimage" unselectable="on">图片</span>
-    </div>
-    <iframe class="editor-content" designMode="on" src="/editor/content"></iframe>
 
-    <div id="textarea"></div>
+<div id="article">
+    {% autoescape %}
+    {{article}}
+    {% endautoescape %}
 </div>
+
+<form action="/editor/article" method="post">
+    <script id="container" name="content" type="text/plain">
+
+    </script>
+    <input type="submit" value="提交">
+</form>
+
 {%endblock%}
 
 {%block script%}
+<script src="/lib/ueditor/ueditor.config.js"></script>
+<script src="/lib/ueditor/ueditor.all.js"></script>
 <script>
-    var button = $(".button");
-    $(".editor-content").load(function () {
-        var editorContent = $(this).contents();
-        var editorContentDocument = editorContent[0];
-        editorContentDocument.designMode = "on";
-        editorContent.focus();
-        $(this).focus();
-        button.click(function () {
-            var that = $(this);
-            var command = that.attr("title");
-
-            if (command == 'createlink' || command == 'insertimage') {
-                var value = prompt('请输入超链接:', 'http://');
-                editorContentDocument.execCommand(command, false, value);
-            } else {
-                editorContentDocument.execCommand(command, false, '');
-            }
-        });
-
-
-
-
+    var ue = UE.getEditor("container");
+    ue.ready(function () {
+        ue.setContent($("#article").html());
     });
-
-
-
-
-
 </script>
 {%endblock%}
