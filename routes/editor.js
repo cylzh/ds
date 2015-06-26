@@ -3,10 +3,23 @@
  */
 var fs = require("fs");
 var path = require("path");
+var async = require('async');
 
 exports.index = function (req, res) {
-    fs.readFile(path.normalize("./public/upload/editor/test.txt"), {encoding: "utf-8"}, function (err, data) {
-        res.render("editor/index", {article: data});
+
+    async.series({
+        article: function (callback) {
+            fs.readFile(path.normalize("./public/upload/editor/test.txt"), {encoding: "utf-8"}, function (err, data) {
+                callback(err, data)
+            })
+        },
+        label: function (callback) {
+            fs.readFile(path.normalize("./public/upload/editor/test1.txt"), {encoding: "utf-8"}, function (err, data) {
+                callback(err, data && JSON.parse(data));
+            })
+        }
+    }, function (err, data) {
+        res.render('editor/index', data);
     })
 }
 
@@ -19,6 +32,31 @@ exports.article = function (req, res) {
     fs.writeFile(path.normalize("./public/upload/editor/test.txt"), req.body.content, function (err) {
         res.redirect("/editor");
     });
+}
+
+exports.label = function (req, res) {
+
+
+    async.waterfall([
+        function (cb) {
+            fs.readFile(path.normalize("./public/upload/editor/test1.txt"), {encoding: "utf-8"}, function (err, data) {
+                cb(err, data && JSON.parse(data));
+            })
+        },
+        function (r, cb) {
+            r || (r = []);
+            r.push({
+                "discription": req.body.discription,
+                "endOffset": req.body.endOffset
+            })
+            fs.writeFile(path.normalize("./public/upload/editor/test1.txt"), JSON.stringify(r), function (err) {
+                cb(err)
+            });
+        }], function (err) {
+        res.redirect("/editor");
+    })
+
+
 }
 
 
@@ -36,6 +74,7 @@ exports.uEditorHandler = function (req, res) {
                     "originalName": file.name,
                     "name": file.name,
                     "url": url,
+                    "title":file.name,
                     "state": "SUCCESS"
                 }));
             });

@@ -34,23 +34,81 @@
     {{article}}
     {% endautoescape %}
 </div>
+<ul>
+    <li>
+        <a class="comment">批注</a>
+    </li>
+    <li>
+        <a class="isFocus">isFocus()</a>
+    </li>
+</ul>
 
+<ul>
+    {%for item in label%}
+    <li data-endOffset="{{item.endOffset}}" class="label">{{item.discription}}</li>
+    {%endfor%}
+</ul>
+
+<form action="/editor/label" method="post" class="form-inline">
+    <div class="from-group">
+        <label>标注说明:</label>
+        <input title="text" name="discription" class="form-control">
+    </div>
+    <input type="hidden" name="endOffset" id="endOffset">
+    <input type="submit" value="提交" class="btn">
+</form>
 <form action="/editor/article" method="post">
     <script id="container" name="content" type="text/plain">
-
     </script>
     <input type="submit" value="提交">
 </form>
-
 {%endblock%}
 
 {%block script%}
 <script src="/lib/ueditor/ueditor.config.js"></script>
 <script src="/lib/ueditor/ueditor.all.js"></script>
+
 <script>
     var ue = UE.getEditor("container");
+
     ue.ready(function () {
         ue.setContent($("#article").html());
+
+        //添加批注
+        $(".comment").click(function () {
+            var uuid = Math.uuidCompact();
+            var insertHtml = '<span class="ui-comment-indication" id="' + uuid + '">' + selectionText + '</span>'
+            ue.execCommand("inserthtml", insertHtml);
+
+            $("#endOffset").val(ue.selection.getRange().endOffset);
+        });
+
+        //定位批注
+        $(".label").click(function () {
+            var node = ue.body.firstChild;
+            ue.selection.getRange().setEndAtFirst(node, $(this).attr("data-endOffset"));
+            ue.selection.getRange().select(true);
+        });
+
+        $(".isFocus").click(function () {
+            var selection = ue.selection;
+            console.log(selection.isFocus())
+        })
+
+        var selectionText = "";
+        ue.addListener('selectionchange', function () {
+            selectionText = ue.selection.getText();
+            console.log(selectionText);
+        })
     });
+
+    Math.uuidCompact = function () {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0,
+                    v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(32);
+        });
+    };
+
 </script>
 {%endblock%}

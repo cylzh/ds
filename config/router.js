@@ -36,5 +36,6 @@ module.exports = function (app) {
     app.post("/editor/article", editor.article);
     app.get("/editor/uEditorHandler", editor.uEditorHandler);
     app.post("/editor/uEditorHandler", editor.uEditorHandler);
+    app.post("/editor/label", editor.label);
 
 }
