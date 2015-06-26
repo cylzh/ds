@@ -24,7 +24,9 @@ ul, li {
 }
 
 .content {
-    margin-top: 50px;
+    margin-top: 60px;
+    padding-bottom: 50px;
+    min-height: 600px;
 }
 
 .mb20 {
@@ -38,3 +40,35 @@ ul, li {
 .footer {
     color: #fff;
 }
+
+/*
+    login
+*/
+.login-warp {
+    width: 400px;
+    float: right;
+    margin-top: 30px;
+}
+
+.login-btns-warp {
+    margin-top: 10px;
+}
+
+.login-warp .btn {
+    margin-left: 5px;
+}
+
+.login-bg {
+    float: left;
+    width: 400px;
+    height: 400px;
+}
+
+/*
+    hacker
+*/
+
+.dropdown-menu {
+    background-color: #fff;
+}
+

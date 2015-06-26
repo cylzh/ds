@@ -1,0 +1,165 @@
+{%extends "../layout.html"%}
+
+{%block style%}
+<link rel="stylesheet" href="/css/page.css">
+<link rel="stylesheet" href="/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.css">
+{%endblock%}
+
+{%block content%}
+<div class="search" style="margin-top:10px;">
+    <form action="" method="post" class="form-inline">
+
+        <label>
+            start:
+        </label>
+        <input title="text" name="search-start-date" id="search-start-date" readonly class="form-control">
+        <label>
+            end:
+        </label>
+        <input title="text" name="search-end-date" id="search-end-date" readonly class="form-control">
+        <input type="submit" class="btn btn-primary" value="搜索">
+    </form>
+</div>
+
+<button type="button" data-toggle="modal" class="btn btn-info" data-target="#movieModal">添加</button>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>名称</th>
+        <th>导演</th>
+        <th>上映时间</th>
+        <th>创建者</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {%set num = pn-1%}
+    {%set num=num*ps%}
+
+    {%for movie in movieList%}
+    {%set num =num +1%}
+    <tr>
+        <td>{{num}}</td>
+        <td>{{movie.title}}</td>
+        <td>{{movie.director}}</td>
+        <td>{{movie.publish_date |date("Y-m-d","-480")}}</td>
+        <td>{{movie._user.userName}}</td>
+        <td>
+            <a class="btn btn-info" href="/movie/detial/{{movie.id}}">详情</a>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+<div id="page" data-totalPages="{{totalPages}}" date-pageNumber="{{pn}}">
+
+</div>
+<div class="modal" id="movieModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>电影添加</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="/movie/add" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title" class="col-lg-2">名称：</label>
+
+                        <div class="col-lg-10">
+                            <input type="text" id="title" name="title" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="director" class="col-lg-2">导演：</label>
+
+                        <div class="col-lg-10">
+                            <input type="text" id="director" name="director" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="intro" class="col-lg-2">描述：</label>
+
+                        <div class="col-lg-10">
+                            <input type="text" id="intro" name="intro" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="publish_date" class="col-lg-2">上映时间：</label>
+
+                        <div class="col-lg-10">
+                            <input type="text" id="publish_date" name="publish_date" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="placard" class="col-lg-2">
+                            海报：
+                        </label>
+
+                        <div class="col-lg-10">
+                            <input type="file" id="placard" name="placard">
+                        </div>
+                    </div>
+                    <div class="form-group" style="text-align: center;">
+                        <input type="submit" class="btn btn-primary" value="确定">
+                        <input type="button" class="btn" data-dismiss="modal" value="取消">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{%block script%}
+
+<script src="/js/bootstrap-paginator.js"></script>
+<script src="/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+<script>
+    var page = $("#page"),
+            currentPage = page.attr("data-pageNumber"),
+            totalPages = page.attr("data-totalPages");
+
+    var options = {
+        currentPage: currentPage,
+        totalPages: totalPages > 1 ? totalPages : 0,
+        numberOfPages: 4,
+        pageUrl: function (type, page, current) {
+            return "/movie?pn=" + page;
+        }
+    }
+
+    page.bootstrapPaginator(options);
+
+
+    $("#publish_date").datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    var startDateInput = $("#search-start-date"),
+            endDateInput = $("#search-end-date");
+
+    var startDate = startDateInput.datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        endDate: endDateInput.val()
+    }).on("changeDate",function(ev){
+        endDate.setStartDate(ev.date)
+    })
+
+    var endDate = endDateInput.datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        startDate: startDateInput.val()
+    }).on("changeDate",function(ev){
+        startDate.setEndDate(ev.date)
+    })
+
+
+</script>
+{%endblock%}

@@ -74,6 +74,5 @@ function upload(req, callback) {
             callback(err, path.normalize(target));
         });
     }
-
 }
 

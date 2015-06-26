@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.5",
-    "bootflat": "*"
+    "bootflat": "*",
+    "bootstrap-datepicker": "~1.4.0"
   }
 }

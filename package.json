@@ -6,6 +6,8 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^0.8.1",
     "connect-multiparty": "^1.2.5",
     "consolidate": "*",
     "express": "3.5.0",
