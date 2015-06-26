@@ -35,6 +35,7 @@ app.use(express.session({
     secret: "secret"
 }))
 
+//优先匹配路由减少io开销
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
